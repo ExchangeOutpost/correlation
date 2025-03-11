@@ -1,10 +1,10 @@
 name: Build
 
-permissions: {}
-
 on:
-  pull_request:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
