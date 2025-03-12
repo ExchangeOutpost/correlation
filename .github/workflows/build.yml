@@ -18,4 +18,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: rustup update
-    - run: cargo build --release
+    - run: cargo build --target wasm32-unknown-unknown
