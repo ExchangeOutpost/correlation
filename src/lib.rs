@@ -15,7 +15,7 @@ pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
     let candles_data: HashMap<String, Vec<Vec<f64>>> = fin_data.data;
     let symbols = candles_data.keys().collect::<Vec<_>>();
     if symbols.len() != 2 {
-        return Ok("Please provide exactly 2 symbols".to_string());
+        return Ok("Please provide exactly 2 symbols for correlation calculation".to_string());
     }
     Ok("TODO".into())
 }
