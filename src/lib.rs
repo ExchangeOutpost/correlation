@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fmt::Write; // Add this import
+use std::fmt::Write;
 
 use extism_pdk::*;
 use serde::{Deserialize, Serialize};
