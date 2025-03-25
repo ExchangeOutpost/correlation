@@ -18,7 +18,7 @@ pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
         let max = close_prices.iter().cloned().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
         let min = close_prices.iter().cloned().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
         let avg = close_prices.iter().sum::<f64>() / close_prices.len() as f64;
-        result = format!("{}\nSymbol: {}Max: {}, Min: {}, Avg: {}\n",key,result, max, min, avg);
+        result = format!("{}\nSymbol: {}\nMax: {}, Min: {}, Avg: {}\n", result, key, max, min, avg);
     }
     Ok(result)
 }
