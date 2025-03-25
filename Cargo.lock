@@ -121,6 +121,8 @@ name = "finfunc_rust"
 version = "0.1.0"
 dependencies = [
  "extism-pdk",
+ "serde",
+ "serde_json",
  "ta",
 ]
 
