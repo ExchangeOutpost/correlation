@@ -13,7 +13,7 @@ pub struct FinData {
 #[plugin_fn]
 pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
     let fin_data = fin_data.into_inner();
-    let mut result = String::new(); // Pre-allocate memory for better performance
+    let mut result = String::new();
     for (key, value) in fin_data.data.iter() {
         let close_prices = value.iter().map(|x| x[3]).collect::<Vec<f64>>();
         let max = close_prices.iter().cloned().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
