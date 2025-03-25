@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fmt::Write;
 
 use extism_pdk::*;
 use serde::{Deserialize, Serialize};
@@ -13,17 +12,10 @@ pub struct FinData {
 #[plugin_fn]
 pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
     let fin_data = fin_data.into_inner();
-    let mut result = String::new();
-    for (key, value) in fin_data.data.iter() {
-        let close_prices = value.iter().map(|x| x[3]).collect::<Vec<f64>>();
-        let max = close_prices.iter().cloned().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
-        let min = close_prices.iter().cloned().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
-        let avg = close_prices.iter().sum::<f64>() / close_prices.len() as f64;
-        writeln!(
-            result,
-            "Symbol: {} Max: {}, Min: {}, Avg: {}",
-            key, max, min, avg
-        ).unwrap(); // Use writeln! for consistent newline handling
+    let candles_data: HashMap<String, Vec<Vec<f64>>> = fin_data.data;
+    let symbols = candles_data.keys().collect::<Vec<_>>();
+    if symbols.len() != 2 {
+        return Ok("Please provide exactly 2 symbols".to_string());
     }
-    Ok(result)
+    Ok("TODO".into())
 }
