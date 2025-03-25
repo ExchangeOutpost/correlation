@@ -21,7 +21,7 @@ pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
         let avg = close_prices.iter().sum::<f64>() / close_prices.len() as f64;
         writeln!(
             result,
-            "Symbol: {}\nMax: {}, Min: {}, Avg: {}",
+            "Symbol: {}Max: {}, Min: {}, Avg: {}",
             key, max, min, avg
         ).unwrap(); // Use writeln! for consistent newline handling
     }
