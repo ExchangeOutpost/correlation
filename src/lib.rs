@@ -1,19 +1,23 @@
-use std::collections::HashMap;
 use ndarray::Array1;
 use extism_pdk::*;
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
+pub struct SymbolsData{
+    symbol_1: Vec<Vec<f64>>,
+    symbol_2: Vec<Vec<f64>>,
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct FinData {
-    data: HashMap<String, Vec<Vec<f64>>>,
+    data: SymbolsData,
 }
 #[derive(Serialize, Deserialize)]
 pub struct Output {
     correlation: f64,
 }
 
-/// Calculate the Pearson correlation coefficient between two stock price series
+// Calculate the Pearson correlation coefficient between two stock price series
 fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
     let x_mean = x.mean().unwrap();
     let y_mean = y.mean().unwrap();
@@ -40,20 +44,10 @@ fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
 #[plugin_fn]
 pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
     let fin_data = fin_data.into_inner();
-    let candles_data: HashMap<String, Vec<Vec<f64>>> = fin_data.data;
-    let symbol_1 = match candles_data.get("symbol_1") {
-        Some(data) => data,
-        None => return Err(WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, "symbol_1 not found")), -100)),
-    };
-
-    let symbol_2 = match candles_data.get("symbol_2") {
-        Some(data) => data,
-        None => return Err(WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, "symbol_2 not found")), -100)),
-    };
     
     let correlation=  pearson_correlation(
-        &Array1::from(symbol_1.iter().map(|x| x[2]).collect::<Vec<f64>>()),
-        &Array1::from(symbol_2.iter().map(|x| x[2]).collect::<Vec<f64>>()),
+        &Array1::from(fin_data.data.symbol_1.iter().map(|x| x[2]).collect::<Vec<f64>>()),
+        &Array1::from(fin_data.data.symbol_2.iter().map(|x| x[2]).collect::<Vec<f64>>()),
     );
     let out = Output {
         correlation: correlation,
