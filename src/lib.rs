@@ -38,10 +38,10 @@ pub fn run(fin_data: FinData<f64>) -> FnResult<Output> {
     let correlation = pearson_correlation(
         &Array1::from_iter(fin_data.get_candles("symbol_1")?
             .windows(2)
-            .map(|w| (w[1].close / w[0].close) - 1.0)),
+            .map(|w| (w[1].close / w[0].close).ln())),
         &Array1::from_iter(fin_data.get_candles("symbol_2")?
             .windows(2)
-            .map(|w| (w[1].close / w[0].close) - 1.0)),
+            .map(|w| (w[1].close / w[0].close).ln())),
     );
     Ok(Output {correlation})
 }
