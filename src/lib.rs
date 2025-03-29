@@ -36,8 +36,8 @@ fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
 #[plugin_fn]
 pub fn run(fin_data: FinData<f64>) -> FnResult<Output> {
     let correlation = pearson_correlation(
-        &Array1::from_iter(fin_data.get_symbol_data("symbol_1")?.iter().map(|x| x.close)),
-        &Array1::from_iter(fin_data.get_symbol_data("symbol_2")?.iter().map(|x| x.close)),
+        &Array1::from_iter(fin_data.get_candles("symbol_1")?.iter().map(|x| x.close)),
+        &Array1::from_iter(fin_data.get_candles("symbol_2")?.iter().map(|x| x.close)),
     );
     Ok(Output {correlation})
 }
