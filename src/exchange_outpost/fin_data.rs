@@ -5,6 +5,7 @@ use serde::de::DeserializeOwned;
 use extism_pdk::*;
 use extism_pdk::FromBytesOwned;
 
+#[allow(dead_code)]
 #[derive(Deserialize)]
 pub struct FinData<T> {
     data: HashMap<String, Vec<Candle<T>>>,
