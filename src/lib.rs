@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct SymbolsData{
-    symbol_1: Vec<Vec<f64>>,
-    symbol_2: Vec<Vec<f64>>,
+    symbol_1: Vec<(i64, f64, f64, f64, f64, f64)>,
+    symbol_2: Vec<(i64, f64, f64, f64, f64, f64)>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -46,8 +46,8 @@ pub fn run(fin_data: Json<FinData>) -> FnResult<String> {
     let fin_data = fin_data.into_inner();
     
     let correlation=  pearson_correlation(
-        &Array1::from(fin_data.data.symbol_1.iter().map(|x| x[2]).collect::<Vec<f64>>()),
-        &Array1::from(fin_data.data.symbol_2.iter().map(|x| x[2]).collect::<Vec<f64>>()),
+        &Array1::from(fin_data.data.symbol_1.iter().map(|x| x.2).collect::<Vec<f64>>()),
+        &Array1::from(fin_data.data.symbol_2.iter().map(|x| x.2).collect::<Vec<f64>>()),
     );
     let out = Output {
         correlation: correlation,
