@@ -1,10 +1,11 @@
 mod exchange_outpost;
 use crate::exchange_outpost::FinData;
-use extism_pdk::{plugin_fn, FnResult};
+use extism_pdk::{encoding, plugin_fn, FnResult, Json, ToBytes};
 use ndarray::Array1;
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToBytes)]
+#[encoding(Json)]
 pub struct Output {
     correlation: f64,
 }
@@ -33,13 +34,10 @@ fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
 }
 
 #[plugin_fn]
-pub fn run(fin_data: FinData<f64>) -> FnResult<String> {
+pub fn run(fin_data: FinData<f64>) -> FnResult<Output> {
     let correlation=  pearson_correlation(
         &Array1::from_iter(fin_data.get_symbol_data("symbol_1")?.iter().map(|x| x.close)),
         &Array1::from_iter(fin_data.get_symbol_data("symbol_2")?.iter().map(|x| x.close)),
     );
-    let out = Output {
-        correlation: correlation,
-    };
-    Ok(serde_json::to_string(&out).unwrap())
+    Ok(Output {correlation})
 }
