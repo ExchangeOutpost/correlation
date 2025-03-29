@@ -1,5 +1,5 @@
-use ndarray::Array1;
 use extism_pdk::*;
+use ndarray::Array1;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
