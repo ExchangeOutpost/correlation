@@ -10,7 +10,7 @@ pub struct Output {
     correlation: f64,
 }
 
-// Calculate the Pearson correlation coefficient between two stock price series
+/// Calculate the Pearson correlation coefficient between two stock price series
 fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
     let x_mean = x.mean().unwrap();
     let y_mean = y.mean().unwrap();
@@ -36,8 +36,12 @@ fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
 #[plugin_fn]
 pub fn run(fin_data: FinData<f64>) -> FnResult<Output> {
     let correlation = pearson_correlation(
-        &Array1::from_iter(fin_data.get_candles("symbol_1")?.iter().map(|x| x.close)),
-        &Array1::from_iter(fin_data.get_candles("symbol_2")?.iter().map(|x| x.close)),
+        &Array1::from_iter(fin_data.get_candles("symbol_1")?
+            .windows(2)
+            .map(|w| (w[1].close / w[0].close) - 1.0)),
+        &Array1::from_iter(fin_data.get_candles("symbol_2")?
+            .windows(2)
+            .map(|w| (w[1].close / w[0].close) - 1.0)),
     );
     Ok(Output {correlation})
 }
