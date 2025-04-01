@@ -25,17 +25,6 @@ jobs:
       with:
         name: finfunc.wasm
         path: target/wasm32-unknown-unknown/debug/finfunc.wasm
-    # - name: Create Release # In theory should already exist
-    #   id: create_release
-    #   uses: actions/create-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     VERSION: ${{ github.ref }}
-    #   with:
-    #     tag_name: latest
-    #     release_name: latest
-    #     draft: false
-    #     prerelease: false 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
