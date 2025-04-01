@@ -25,6 +25,6 @@ impl<T> FinData<T> {
         self.data.get(symbol).ok_or(
             WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, format!(
             "Symbol {} not found", symbol
-        ))), -1))
+        ))), 1))
     }
 }
