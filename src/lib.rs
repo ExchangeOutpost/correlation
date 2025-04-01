@@ -7,6 +7,7 @@ use serde::Serialize;
 #[derive(Serialize, ToBytes)]
 #[encoding(Json)]
 pub struct Output {
+    symbols: [String;2],
     correlation: f64,
 }
 
@@ -35,13 +36,13 @@ fn pearson_correlation(x: &Array1<f64>, y: &Array1<f64>) -> f64 {
 
 #[plugin_fn]
 pub fn run(fin_data: FinData<f64>) -> FnResult<Output> {
+    let ticker_1 = fin_data.get_ticker("symbol_1")?;
+    let ticker_2 = fin_data.get_ticker("symbol_2")?;
     let correlation = pearson_correlation(
-        &Array1::from_iter(fin_data.get_candles("symbol_1")?
-            .windows(2)
+        &Array1::from_iter(ticker_1.candles.windows(2)
             .map(|w| (w[1].close / w[0].close).ln())),
-        &Array1::from_iter(fin_data.get_candles("symbol_2")?
-            .windows(2)
+        &Array1::from_iter(ticker_2.candles.windows(2)
             .map(|w| (w[1].close / w[0].close).ln())),
     );
-    Ok(Output {correlation})
+    Ok(Output {correlation, symbols: [ticker_1.symbol.clone(), ticker_2.symbol.clone()]})
 }

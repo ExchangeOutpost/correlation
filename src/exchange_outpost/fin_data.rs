@@ -5,10 +5,19 @@ use serde::de::DeserializeOwned;
 use extism_pdk::*;
 use extism_pdk::FromBytesOwned;
 
+#[derive(Deserialize)]
+#[allow(dead_code)]
+pub struct TickersData<T> {
+    pub symbol: String,
+    pub exchange: String,
+    pub candles: Vec<Candle<T>>,
+    pub precision: i32,
+}
+
 #[allow(dead_code)]
 #[derive(Deserialize)]
 pub struct FinData<T> {
-    tickers_data: HashMap<String, Vec<Candle<T>>>,
+    tickers_data: HashMap<String, TickersData<T>>,
     piped_data: HashMap<String,String>
 }
 
@@ -23,10 +32,10 @@ where
 
 #[allow(dead_code)]
 impl<T> FinData<T> {
-    pub fn get_candles(&self, symbol: &str) -> Result<&Vec<Candle<T>>, WithReturnCode<Error>> {
-        self.tickers_data.get(symbol).ok_or(
+    pub fn get_candles(&self, label: &str) -> Result<&Vec<Candle<T>>, WithReturnCode<Error>> {
+        self.tickers_data.get(label).and_then(|v| Some(&v.candles)).ok_or(
             WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, format!(
-            "Symbol {} not found", symbol
+            "Symbol {} not found", label
         ))), 1))
     }
 
@@ -39,5 +48,12 @@ impl<T> FinData<T> {
             WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, format!(
             "Source {} not found", source
         ))), 2))
+    }
+
+    pub fn get_ticker (&self, label: &str) -> Result<&TickersData<T>, WithReturnCode<Error>> {
+        self.tickers_data.get(label).ok_or(
+            WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, format!(
+            "Ticker {} not found", label
+        ))), 3))
     }
 }
