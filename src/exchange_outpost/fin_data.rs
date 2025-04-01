@@ -22,7 +22,7 @@ where
 }
 impl<T> FinData<T> {
     pub fn get_candles(&self, symbol: &str) -> Result<&Vec<Candle<T>>, WithReturnCode<Error>> {
-        self.data.get(symbol).ok_or(
+        self.tickers_data.get(symbol).ok_or(
             WithReturnCode::new(Error::new(std::io::Error::new(std::io::ErrorKind::Other, format!(
             "Symbol {} not found", symbol
         ))), 1))
