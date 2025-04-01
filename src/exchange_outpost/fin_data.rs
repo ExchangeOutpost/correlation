@@ -8,7 +8,8 @@ use extism_pdk::FromBytesOwned;
 #[allow(dead_code)]
 #[derive(Deserialize)]
 pub struct FinData<T> {
-    data: HashMap<String, Vec<Candle<T>>>,
+    tickers_data: HashMap<String, Vec<Candle<T>>>,
+    piped_data: HashMap<String,String>
 }
 
 impl<T> FromBytesOwned for FinData<T>
